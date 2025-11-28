@@ -1,0 +1,40 @@
+[
+  {
+    "label": "Build Project",
+    "command": "cmake",
+    "args": ["--build", "build"],
+    "use_new_terminal": false
+  },
+  {
+    "label": "Run Program",
+    "command": "cmd",
+    "args": ["/c", "start", ".\\build\\Debug\\my_program.exe"],
+    "use_new_terminal": false
+  },
+  {
+    "label": "Build and Run",
+    "command": ".\\run.bat",
+    "args": [],
+    "use_new_terminal": false
+  },
+  {
+    "label": "Configure CMake",
+    "command": "cmake",
+    "args": [
+      "-B",
+      "build",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DCMAKE_TOOLCHAIN_FILE=C:/Users/thisi/Documents/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    ],
+    "use_new_terminal": false
+  },
+  {
+    "label": "Clean Build",
+    "command": "powershell",
+    "args": [
+      "-Command",
+      "Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue; cmake -B build -DCMAKE_BUILD_TYPE=Debug"
+    ],
+    "use_new_terminal": false
+  }
+]
