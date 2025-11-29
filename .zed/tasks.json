@@ -9,13 +9,13 @@
     "label": "Run Program",
     "command": "cmd",
     "args": ["/c", "start", ".\\build\\Debug\\my_program.exe"],
-    "use_new_terminal": false
+    "use_new_terminal": true
   },
   {
     "label": "Build and Run",
-    "command": ".\\run.bat",
-    "args": [],
-    "use_new_terminal": false
+    "command": "cmd",
+    "args": ["/c", ".\\run.bat"],
+    "use_new_terminal": true
   },
   {
     "label": "Configure CMake",
