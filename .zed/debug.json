@@ -1,13 +1,10 @@
-{
-  "configurations": [
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug C++ Program",
-      "program": "${workspaceFolder}/build/Debug/my_program.exe",
-      "args": [],
-      "cwd": "${workspaceFolder}",
-      "preLaunchTask": "Build Project"
-    }
-  ]
-}
+[
+  {
+    "type": "lldb",
+    "request": "launch",
+    "name": "Debug C++ Program",
+    "program": "${workspaceFolder}/build/Debug/my_program.exe",
+    "cwd": "${workspaceFolder}",
+    "args": []
+  }
+]

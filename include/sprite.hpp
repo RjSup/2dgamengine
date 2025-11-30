@@ -1,43 +1,56 @@
 #pragma once
 
 #include <SDL.h>
+#include "SDL_rect.h"
 #include "SDL_render.h"
-#include "animation.hpp"
 #include <string>
 #include <memory>
+#include "animation.hpp"
 
 class Sprite {
-    public:
-        Sprite(SDL_Renderer* renderer, const std::string& texturePath, int x, int y, int width, int height);
-        ~Sprite() = default;
+public:
+    Sprite(SDL_Renderer* renderer, const std::string& texturePath, int x, int y, int width, int height);
+    ~Sprite() = default;
 
-        void render(SDL_Renderer* renderer) const;
+    void render(SDL_Renderer* renderer) const;
 
-        void setPosition(int x, int y);
-        void setSize(int width, int height);
-        void setScale(float scaleX, float scaleY);
+    void setPosition(int x, int y);
+    void setSize(int width, int height);
+    void setScale(float scaleX, float scaleY);
 
-        // which part of sprite sheet to render
-        void setSourceRect(int x, int y, int w, int h);
+    // which part of sprite sheet to render
+    void setSourceRect(int x, int y, int w, int h);
 
-        int getX() const { return destinationRect.x; }
-        int getY() const { return destinationRect.y; }
-        int getWidth() const { return destinationRect.w; }
-        int getHeight() const { return destinationRect.h; }
+    int getX() const { return destinationRect.x; }
+    int getY() const { return destinationRect.y; }
+    int getWidth() const { return destinationRect.w; }
+    int getHeight() const { return destinationRect.h; }
 
-        void setAnimation(std::shared_ptr<Animation> anim);
-        void update(float deltaTime);
+    // raw pointer (non-owning) of anim
+    void setAnimation(Animation* anim);
+    // update sprite things
+    void update(float deltaTime);
 
-    private:
-        // dest on screen of sprite
-        SDL_Rect destinationRect;
-        // part of the texture to draw
-        SDL_Rect sourceRect;
-        // unique texture data
-        std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> texture;
-        // share the animation pointer - it can change
-        std::shared_ptr<Animation> animation;
+    // set wether debug box show sor no
+    void setDebugBox(bool show) { this->showDebugBox = show; }
+    // whether two obejcts are colliding
+    void setColliding(bool colliding) { this->colliding = colliding; }
+    // get area of collison box for object
+    SDL_Rect getCollisionBox() const { return {destinationRect.x, destinationRect.y, destinationRect.w, destinationRect.h}; }
 
-        float scaleX = 1.0f;
-        float scaleY = 1.0f;
+private:
+    SDL_Rect destinationRect; // destination on screen
+    SDL_Rect sourceRect;      // part of texture to draw
+
+    // unique texture data
+    std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> texture;
+
+    // non-owning pointer to animation
+    Animation* animation = nullptr;
+
+    float scaleX = 1.0f;
+    float scaleY = 1.0f;
+
+    bool showDebugBox = false;
+    bool colliding = false;
 };

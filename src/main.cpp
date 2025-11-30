@@ -61,7 +61,5 @@ int main(int argc, char* argv[]) {
 
     std::cout << std::endl;
 
-    game.clean();
-
     return 0;
 }
