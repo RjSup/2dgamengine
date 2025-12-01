@@ -1,56 +1,48 @@
 #pragma once
-
 #include <SDL.h>
-#include "SDL_rect.h"
-#include "SDL_render.h"
-#include <string>
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include "animation.hpp"
 
 class Sprite {
 public:
-    Sprite(SDL_Renderer* renderer, const std::string& texturePath, int x, int y, int width, int height);
-    ~Sprite() = default;
+    Sprite(SDL_Renderer* renderer, const std::string& texture_path, int x, int y, int width, int height);
+    virtual ~Sprite() = default;
 
-    void render(SDL_Renderer* renderer) const;
+    // sprites are updated based on deltaTime - movement - animations etc
+    virtual void update(float delta_time);
+    virtual void render(SDL_Renderer* renderer) const;
 
-    void setPosition(int x, int y);
-    void setSize(int width, int height);
-    void setScale(float scaleX, float scaleY);
+    void set_position(int x, int y);
+    void set_size(int w, int h);
+    int getX() const { return destination_rect.x; }
+    int getY() const { return destination_rect.y; }
 
-    // which part of sprite sheet to render
-    void setSourceRect(int x, int y, int w, int h);
+    // loc of collision box on a sprite
+    SDL_Rect get_collision_box() const { return { destination_rect.x, destination_rect.y, destination_rect.w, destination_rect.h }; }
 
-    int getX() const { return destinationRect.x; }
-    int getY() const { return destinationRect.y; }
-    int getWidth() const { return destinationRect.w; }
-    int getHeight() const { return destinationRect.h; }
+    // sprite owns animations
+    void add_animation(const std::string& name, std::unique_ptr<Animation> anim);
+    void set_animation(const std::string& name);
 
-    // raw pointer (non-owning) of anim
-    void setAnimation(Animation* anim);
-    // update sprite things
-    void update(float deltaTime);
+    void set_debug_box(bool show) { show_debug_box = show; }
+    void set_colliding(bool c) { colliding = c; }
 
-    // set wether debug box show sor no
-    void setDebugBox(bool show) { this->showDebugBox = show; }
-    // whether two obejcts are colliding
-    void setColliding(bool colliding) { this->colliding = colliding; }
-    // get area of collison box for object
-    SDL_Rect getCollisionBox() const { return {destinationRect.x, destinationRect.y, destinationRect.w, destinationRect.h}; }
+protected:
+    SDL_Rect destination_rect;
+    SDL_Rect source_rect;
+    std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> texture{ nullptr, SDL_DestroyTexture };
 
 private:
-    SDL_Rect destinationRect; // destination on screen
-    SDL_Rect sourceRect;      // part of texture to draw
+    // store all possible animations
+    std::unordered_map<std::string, std::unique_ptr<Animation>> animations;
+    // pointer to which animation is currently used - init to nullptr
+    Animation* current_animation = nullptr;
 
-    // unique texture data
-    std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)> texture;
+    float scale_x = 1.0f;
+    float scale_y = 1.0f;
 
-    // non-owning pointer to animation
-    Animation* animation = nullptr;
-
-    float scaleX = 1.0f;
-    float scaleY = 1.0f;
-
-    bool showDebugBox = false;
+    bool show_debug_box = false;
     bool colliding = false;
 };

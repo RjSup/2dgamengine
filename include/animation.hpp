@@ -1,28 +1,24 @@
 #pragma once
-
 #include "SDL_rect.h"
-
 #include <vector>
 
 class Animation {
-    public:
-        // animation must be 32x32 area of a sprite sheet
-        Animation(int row, int frameW, int frameH, int totalFrames, float frameTime);
+public:
+    Animation(int row, int frame_width, int frame_height, int total_frames, float frame_time);
 
-        // update the location of spritesheet over time
-        void update(float deltaTime);
+// update the aniamtion based on delta time
+void update(float delta_time);
+    // get the current frame of animation
+    SDL_Rect get_frame() const { return frames[current_frame]; }
+    // reset the animations so init state
+    void reset() { current_frame = 0; timer = 0.0f; }
 
-        // what frame of the animation are we at
-        SDL_Rect getFrame() const { return frames[currentFrame]; };
+private:
+// array of frames
+    std::vector<SDL_Rect> frames;
+    int frame_width, frame_height;
+    float frame_time;
 
-        void reset() { currentFrame = 0; timer = 0.0f; }
-
-    private:
-        // store each frame of the sheet to loop them
-        std::vector<SDL_Rect> frames;
-        int frameW, frameH;
-        float frameTime;
-
-        float timer = 0.0f;
-        int currentFrame = 0;
+    float timer = 0.0f;
+    int current_frame = 0;
 };

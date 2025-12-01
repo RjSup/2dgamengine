@@ -15,7 +15,7 @@ Renderer::Renderer(const Window& window)
     }
 }
 
-void Renderer::setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+void Renderer::set_draw_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
     SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 }

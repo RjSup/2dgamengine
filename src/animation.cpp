@@ -1,26 +1,23 @@
 #include "animation.hpp"
 
-Animation::Animation(int row, int frameW, int frameH, int totalFrames, float frameTime)
-    : frameW(frameW), frameH(frameH), frameTime(frameTime)
+Animation::Animation(int row, int frame_w, int frame_h, int total_frames, float frame_time)
+    : frame_width(frame_w), frame_height(frame_h), frame_time(frame_time)
 {
-    frames.reserve(totalFrames);
-    for (int i = 0; i < totalFrames; ++i) {
-        frames.emplace_back(SDL_Rect{i * frameW, row * frameH, frameW, frameH});
+    // locate all frames from sprite sheet [][][][]
+    frames.reserve(total_frames);
+    for (int i = 0; i < total_frames; ++i) {
+        frames.emplace_back(SDL_Rect{ i * frame_w, row * frame_h, frame_w, frame_h });
     }
 }
 
-
-
-void Animation::update(float deltaTime) {
-    // init timer as delta time
-    timer += deltaTime;
-
-    // if timer has run its time
-    if (timer >= frameTime) {
-        // reset time
-        timer -= frameTime;
-
-        // advance the frame index for size frames
-        currentFrame = (currentFrame + 1) % frames.size();
+void Animation::update(float delta_time) {
+    // ensuring aniamtion updates are using delta time
+    timer += delta_time;
+    // when time gone past = frametime which is how many frames available
+    if (timer >= frame_time) {
+        // reset timer - basically replay the anim
+        timer -= frame_time;
+        // advance through the frames
+        current_frame = (current_frame + 1) % static_cast<int>(frames.size());
     }
 }

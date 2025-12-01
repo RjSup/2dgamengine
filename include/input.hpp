@@ -1,41 +1,30 @@
 #pragma once
-
 #include <SDL.h>
 #include <unordered_map>
 
-enum class KeyState { Pressed, Released };
+enum class Key_State { Pressed, Released };
 
-struct InputState {
-    std::unordered_map<SDL_Keycode, KeyState> keys; // keyboard states
-    int mouseX = 0; // mouse x pos
-    int mouseY = 0; // mouse y pos
-    std::unordered_map<Uint8, KeyState> mouseButtons;   // mouse buttons
+struct Input_State {
+    // key value storage of key codes and key state
+    std::unordered_map<SDL_Keycode, Key_State> keys;
+    // same for buttons
+    std::unordered_map<Uint8, Key_State> mouse_button;
+    int mouseX = 0, mouseY = 0;
 
-    // are keys pressed
-    bool isKeyPressed(SDL_Keycode key) const {
-        // find the key pressed
+    bool is_key_pressed(SDL_Keycode key) const {
+        // if key pressed find which one
         auto it = keys.find(key);
-        // return that key didnt end and its state is pressed
-        return it != keys.end() && it->second == KeyState::Pressed;
+        // reutrn the key and set state presses
+        return it != keys.end() && it->second == Key_State::Pressed;
     }
-
-    bool isKeyReleased(SDL_Keycode key) const {
-        // find the key realsed
+    bool is_key_released(SDL_Keycode key) const {
+        // if key released find which one
         auto it = keys.find(key);
-        // change its state to released
-        return it != keys.end() && it->second == KeyState::Released;
+        // return the key and set state to released
+        return it != keys.end() && it->second == Key_State::Released;
     }
-
-    // is mouse pressed
-    bool isMousePressed(Uint8 button) const {
-        // find the mouse button
-        auto it = mouseButtons.find(button);
-        // return state is pressed
-        return it != mouseButtons.end() && it->second == KeyState::Pressed;
-    }
-
-    bool isMouseRelease(Uint8 button) const {
-        auto it = mouseButtons.find(button);
-        return it != mouseButtons.end() && it->second == KeyState::Released;
+    bool is_mouse_pressed(Uint8 b) const {
+        auto it = mouse_button.find(b);
+        return it != mouse_button.end() && it->second == Key_State::Pressed;
     }
 };

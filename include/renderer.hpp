@@ -11,7 +11,7 @@ class Renderer {
 
         SDL_Renderer* get() const { return renderer.get(); }
 
-        void setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+        void set_draw_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
         void clear();
         void present();
 

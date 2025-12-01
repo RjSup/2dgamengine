@@ -1,31 +1,28 @@
 #pragma once
-
 #include <vector>
-#include "SDL_rect.h"
-
-class Sprite;
+#include <memory>
+#include "sprite.hpp"
 
 class Collider {
 public:
-    Collider() : debugMode(false) {}
+    Collider() = default;
     ~Collider() = default;
 
-    // if debug mode should be allowed or not
-    void setDebugMode(bool enabled) { debugMode = enabled; }
-
-    // add sprites to collider
-    void addSprite(Sprite* sprite);
-
-    // update collider state
+    void add_sprite(const std::shared_ptr<Sprite>& sprite);
+    // removes a sprite from the collision bounds
+    void remove_sprite(Sprite* sprite);
+    // updates collider based on location and if colliding
     void update();
+    // set whether debug mode should be on or off
+    void set_debug_mode(bool enabled) { debug_mode = enabled; }
+    // whether the mode is on or no
+    bool is_debug_mode() const { return debug_mode; }
 
 private:
-    // raw pointer to array of sprites
-    std::vector<Sprite*> sprites;
-    bool debugMode;
+// store weak_ptrs to avoid ownership cycles
+    std::vector<std::weak_ptr<Sprite>> sprites;
+    bool debug_mode = false;
 
-    // check if to rects collide
-    bool checkCollision(const SDL_Rect& a, const SDL_Rect& b);
-    // what should happen if they do
-    void conflictResolution(Sprite* sprite1, Sprite* sprite2);
+    // whether the player sprite rect collides with an enemy sprite rect
+    bool check_collision(const SDL_Rect& a, const SDL_Rect& b);
 };
