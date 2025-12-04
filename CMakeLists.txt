@@ -19,11 +19,28 @@ find_package(SDL2_image CONFIG REQUIRED)
 # Recursively collect all .cpp files
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
+    "${PROJECT_SOURCE_DIR}/animations/*.cpp"
+    "${PROJECT_SOURCE_DIR}/collisions/*.cpp"
+    "${PROJECT_SOURCE_DIR}/entities/*.cpp"
+    "${PROJECT_SOURCE_DIR}/inputs/*.cpp"
+    "${PROJECT_SOURCE_DIR}/game/*.cpp"
+    "${PROJECT_SOURCE_DIR}/renderer/*.cpp"
+    "${PROJECT_SOURCE_DIR}/scenes/*.cpp"
+    "${PROJECT_SOURCE_DIR}/window/*.cpp"
+    "${PROJECT_SOURCE_DIR}/ui/*.cpp"
 )
 
 # Recursively collect all .hpp files for IDE visibility (not strictly needed for compilation)
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS
-    "${PROJECT_SOURCE_DIR}/include/*.hpp"
+    ${PROJECT_SOURCE_DIR}/animations/*.hpp
+    ${PROJECT_SOURCE_DIR}/collisions/*.hpp
+    ${PROJECT_SOURCE_DIR}/entities/*.hpp
+    ${PROJECT_SOURCE_DIR}/inputs/*.hpp
+    ${PROJECT_SOURCE_DIR}/game/*.hpp
+    ${PROJECT_SOURCE_DIR}/renderer/*.hpp
+    ${PROJECT_SOURCE_DIR}/scenes/*.hpp
+    ${PROJECT_SOURCE_DIR}/inputs/*.hpp
+    ${PROJECT_SOURCE_DIR}/ui/*.hpp
 )
 
 # Combine sources and headers for IDE
@@ -34,7 +51,15 @@ add_executable(my_program ${ALL_FILES})
 
 # Include the include/ directory for headers
 target_include_directories(my_program PRIVATE
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/animations
+    ${PROJECT_SOURCE_DIR}/collisions
+    ${PROJECT_SOURCE_DIR}/entities
+    ${PROJECT_SOURCE_DIR}/inputs
+    ${PROJECT_SOURCE_DIR}/game
+    ${PROJECT_SOURCE_DIR}/renderer
+    ${PROJECT_SOURCE_DIR}/scenes
+    ${PROJECT_SOURCE_DIR}/window
+    ${PROJECT_SOURCE_DIR}/ui
 )
 
 # Link SDL2 libraries

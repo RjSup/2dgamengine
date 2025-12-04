@@ -8,6 +8,7 @@
 
 #include "menu_scene.hpp"
 #include "level_one.hpp"
+#include "scene_manager.hpp"
 
 Game::Game() : running(false) {}
 Game::~Game() { clean(); }
@@ -35,6 +36,7 @@ bool Game::init(const char* title, int width, int height) {
         // add scenes
         scene_manager->add_scene<MenuScene>("menu", scene_manager.get(), renderer->get());
         scene_manager->add_scene<LevelOne>("level_1", scene_manager.get(), renderer->get());
+        // scene_manager->add_scene<Options>("options", scene_manager.get(), renderer->get());
 
         if (!scene_manager->switch_to_scene("menu")) {
             throw std::runtime_error("Failed to switch to menu");
@@ -73,6 +75,10 @@ void Game::handleEvents() {
                 break;
             case SDL_MOUSEBUTTONUP:
                 input.mouse_button[event.button.button] = Key_State::Released;
+                break;
+            case SDL_MOUSEMOTION:
+                input.mouse_x = event.motion.x;
+                input.mouse_y = event.motion.y;
                 break;
             default:
                 break;

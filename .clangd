@@ -2,6 +2,14 @@ CompileFlags:
   Add:
     - -IC:\Users\thisi\Documents\vcpkg\installed\x64-windows\include\SDL2
     - -IC:\Users\thisi\Documents\sdl-window\src
-    - -IC:\Users\thisi\Documents\sdl-window\include
+    - -IC:\Users\thisi\Documents\sdl-window\animations
+    - -IC:\Users\thisi\Documents\sdl-window\collisions
+    - -IC:\Users\thisi\Documents\sdl-window\entities
+    - -IC:\Users\thisi\Documents\sdl-window\game
+    - -IC:\Users\thisi\Documents\sdl-window\inputs
+    - -IC:\Users\thisi\Documents\sdl-window\renderer
+    - -IC:\Users\thisi\Documents\sdl-window\scenes
+    - -IC:\Users\thisi\Documents\sdl-window\window
+    - -IC:\Users\thisi\Documents\sdl-window\ui
     - /std:c++17
     - /EHsc

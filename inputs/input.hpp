@@ -9,7 +9,7 @@ struct Input_State {
     std::unordered_map<SDL_Keycode, Key_State> keys;
     // same for buttons
     std::unordered_map<Uint8, Key_State> mouse_button;
-    int mouseX = 0, mouseY = 0;
+    int mouse_x = 0, mouse_y = 0;
 
     bool is_key_pressed(SDL_Keycode key) const {
         // if key pressed find which one
