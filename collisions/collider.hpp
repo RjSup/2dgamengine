@@ -25,4 +25,6 @@ private:
 
     // whether the player sprite rect collides with an enemy sprite rect
     bool check_collision(const SDL_Rect& a, const SDL_Rect& b);
+
+    void collision_resolution(Sprite* sprite1, Sprite* sprite2);
 };

@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "animation.hpp"
+#include "camera.hpp"
 
 class Sprite {
 public:
@@ -12,13 +13,14 @@ public:
 
     // sprites are updated based on deltaTime - movement - animations etc
     virtual void update(float delta_time);
-    virtual void render(SDL_Renderer* renderer) const;
+    virtual void render(SDL_Renderer* renderer, const Camera* cam = nullptr) const;
 
     void set_position(int x, int y);
     void set_size(int w, int h);
+
     int getX() const { return destination_rect.x; }
     int getY() const { return destination_rect.y; }
-
+    const SDL_Rect& get_dest_rect() const { return destination_rect; }
     // loc of collision box on a sprite
     SDL_Rect get_collision_box() const { return { destination_rect.x, destination_rect.y, destination_rect.w, destination_rect.h }; }
 

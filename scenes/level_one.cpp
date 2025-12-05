@@ -1,40 +1,39 @@
 #include "level_one.hpp"
-#include "SDL_render.h"
-#include "input.hpp"
 
-LevelOne::LevelOne(SceneManager* manager_, SDL_Renderer* renderer_)
-    : manager(manager_), renderer(renderer_) {}
+LevelOne::LevelOne(SceneManager* manager_, SDL_Renderer* renderer_, int screen_w, int screen_h)
+    : manager(manager_), renderer(renderer_), camera(level_bounds.w, level_bounds.h, 0.1f)
+{
+    camera.set_screen_size(screen_w, screen_h);
+}
 
 void LevelOne::on_enter() {
-    // spwan player and enemy when scene enters
     spawn_player(renderer);
-    spawn_enemies(renderer, 3);
+    spawn_enemies(renderer, 1);
 }
 
 void LevelOne::on_exit() {
-    // clean all objects
     objects.clear();
     enemies.clear();
     player.reset();
 }
 
 void LevelOne::update(float delta_time, const Input_State& input) {
-    // player input
-    if (player) {
-        player->handle_input(input, delta_time);
-    }
+    if (player) player->handle_input(input, delta_time);
 
-    // enemy movement
-    for (auto& enemy : enemies) {
-        enemy->update_movement(delta_time);
-    }
+    for (auto& enemy : enemies)
+        enemy->update_movement(delta_time, player->get_dest_rect().x, player->get_dest_rect().y);
 
-    // animations and collider checks
     Scene::update(delta_time, input);
+
+    if (player)
+        camera.follow(player->get_dest_rect(), delta_time);
+
+    // Debug
+    // std::cout << "Camera: " << camera.get_x() << ", " << camera.get_y() << "\n";
 }
 
-void LevelOne::render(SDL_Renderer* renderer) {
-    Scene::render(renderer);
+void LevelOne::render(SDL_Renderer* renderer, const Camera* cam) {
+    Scene::render(renderer, cam ? cam : &camera);
 }
 
 void LevelOne::spawn_player(SDL_Renderer* renderer_) {
@@ -50,19 +49,15 @@ void LevelOne::spawn_player(SDL_Renderer* renderer_) {
 
 void LevelOne::spawn_enemies(SDL_Renderer* renderer_, int count) {
     for (int i = 0; i < count; ++i) {
-        int x = 200 + i * 120;
-        int y = 200;
+        // x pos for each enemy
+        int x = 50 + i * rand() % 1900;
+        int y = 50 + i * rand() % 1200;
         auto enemy = std::make_shared<Enemy>(renderer_, "assets/random.png", x, y, 64, 64);
-        // assign animations
         enemy->add_animation("left", std::make_unique<Animation>(1, 64, 64, 4, 0.15f));
         enemy->add_animation("right", std::make_unique<Animation>(2, 64, 64, 4, 0.15f));
         enemy->set_animation("right");
-
-        // set patrol bounds
-        enemy->set_patrol_bounds(100, 700);
-
+        // enemy->set_patrol_bounds(100, 1900);
         enemies.push_back(enemy);
-
         add_object(enemy);
     }
 }

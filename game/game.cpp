@@ -35,7 +35,7 @@ bool Game::init(const char* title, int width, int height) {
 
         // add scenes
         scene_manager->add_scene<MenuScene>("menu", scene_manager.get(), renderer->get());
-        scene_manager->add_scene<LevelOne>("level_1", scene_manager.get(), renderer->get());
+        scene_manager->add_scene<LevelOne>("level_1", scene_manager.get(), renderer->get(), width, height);
         // scene_manager->add_scene<Options>("options", scene_manager.get(), renderer->get());
 
         if (!scene_manager->switch_to_scene("menu")) {
@@ -55,33 +55,31 @@ void Game::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            case SDL_QUIT:
-                running = false;
-                break;
+            case SDL_QUIT: running = false; break;
             case SDL_KEYDOWN:
                 input.keys[event.key.keysym.sym] = Key_State::Pressed;
                 if (event.key.keysym.sym == SDLK_ESCAPE) running = false;
                 if (event.key.keysym.sym == SDLK_0) {
-                    // toggle debug mode on the scene
                     auto current = scene_manager->get_current_scene();
                     if (current) current->set_debug_mode(!current->is_debug_mode());
                 }
                 break;
-            case SDL_KEYUP:
-                input.keys[event.key.keysym.sym] = Key_State::Released;
+            case SDL_KEYUP: input.keys[event.key.keysym.sym] = Key_State::Released; break;
+            case SDL_MOUSEBUTTONDOWN: input.mouse_button[event.button.button] = Key_State::Pressed; break;
+            case SDL_MOUSEBUTTONUP: input.mouse_button[event.button.button] = Key_State::Released; break;
+            case SDL_MOUSEMOTION: input.mouse_x = event.motion.x; input.mouse_y = event.motion.y; break;
+            case SDL_WINDOWEVENT:
+                if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+                    int new_w = event.window.data1;
+                    int new_h = event.window.data2;
+                    auto current = scene_manager->get_current_scene();
+                    if (current) {
+                        LevelOne* level = dynamic_cast<LevelOne*>(current);
+                        if (level) level->get_camera().set_screen_size(new_w, new_h);
+                    }
+                }
                 break;
-            case SDL_MOUSEBUTTONDOWN:
-                input.mouse_button[event.button.button] = Key_State::Pressed;
-                break;
-            case SDL_MOUSEBUTTONUP:
-                input.mouse_button[event.button.button] = Key_State::Released;
-                break;
-            case SDL_MOUSEMOTION:
-                input.mouse_x = event.motion.x;
-                input.mouse_y = event.motion.y;
-                break;
-            default:
-                break;
+            default: break;
         }
     }
 }

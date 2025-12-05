@@ -36,14 +36,21 @@ void Sprite::update(float delta_time) {
     }
 }
 
-void Sprite::render(SDL_Renderer* renderer) const {
+void Sprite::render(SDL_Renderer* renderer, const Camera* cam) const {
     if (!texture || !renderer) return;
-    SDL_RenderCopy(renderer, texture.get(), &source_rect, &destination_rect);
+
+    SDL_Rect render_rect = destination_rect;
+    if(cam) {
+        render_rect.x -= cam->get_x();
+        render_rect.y -= cam->get_y();
+    }
+
+    SDL_RenderCopy(renderer, texture.get(), &source_rect, &render_rect);
 
     if (show_debug_box) {
         SDL_Color color = colliding ? SDL_Color{255,0,0,255} : SDL_Color{0,255,0,255};
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-        SDL_RenderDrawRect(renderer, &destination_rect);
+        SDL_RenderDrawRect(renderer, &render_rect);
     }
 }
 
